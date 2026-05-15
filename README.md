@@ -1,183 +1,199 @@
-# Tasky — MERN Stack To-Do App
+Practical 14 — CC Cloud-Based To-Do List Manager (MERN)
+Step 1 — Clone Repository
+git clone https://github.com/YOUR_USERNAME/todo-app.git
 
-A clean, minimalistic full-stack To-Do application built with **MongoDB, Express.js, React, and Node.js**.
+Go inside:
 
----
+cd todo-app
 
-## 📁 Project Structure
+Check folders:
 
-```
-ToDo/
-├── server/                   # Backend (Node + Express)
-│   ├── config/
-│   │   └── db.js             # MongoDB connection
-│   ├── controllers/
-│   │   └── todoController.js # Business logic (CRUD)
-│   ├── middleware/
-│   │   ├── errorHandler.js   # Global error handler
-│   │   └── validate.js       # express-validator middleware
-│   ├── models/
-│   │   └── Todo.js           # Mongoose schema
-│   ├── routes/
-│   │   └── todoRoutes.js     # REST API routes
-│   ├── .env                  # Environment variables
-│   ├── .env.example          # Env template
-│   ├── package.json
-│   └── server.js             # App entry point
-│
-└── client/                   # Frontend (React + Vite)
-    ├── src/
-    │   ├── components/
-    │   │   ├── AddTaskForm.jsx   # Task input form
-    │   │   ├── EmptyState.jsx    # Empty list message
-    │   │   ├── FilterBar.jsx     # All/Pending/Completed tabs
-    │   │   ├── SkeletonLoader.jsx# Shimmer loading cards
-    │   │   └── TodoCard.jsx      # Single task card
-    │   ├── hooks/
-    │   │   └── useTodos.js       # Custom hook (all API logic)
-    │   ├── services/
-    │   │   └── todoService.js    # Axios instance + API calls
-    │   ├── App.jsx               # Root component
-    │   ├── index.css             # Global styles / design tokens
-    │   └── main.jsx              # React entry point
-    ├── index.html
-    ├── vite.config.js
-    └── package.json
-```
+ls
 
----
+You should see:
 
-## ⚙️ Prerequisites
+backend  frontend
+Step 2 — Install MongoDB
+sudo apt update
+sudo apt install mongodb -y
 
-- **Node.js** v18+
-- **MongoDB** running locally on port `27017`
-  - [Download MongoDB Community](https://www.mongodb.com/try/download/community)
-  - Start with: `mongod` or open **MongoDB Compass**
+Start MongoDB:
 
----
+sudo systemctl start mongod
 
-## 🚀 Setup & Running
+Enable MongoDB:
 
-### Step 1 — Backend
+sudo systemctl enable mongod
+Step 3 — Backend Setup
 
-```bash
-cd server
+Go to backend:
+
+cd backend
+
+Install packages:
+
 npm install
-npm run dev
-# → Express API running at http://localhost:5000
-```
 
-### Step 2 — Frontend (new terminal)
+Create .env:
 
-```bash
-cd client
-npm install
-npm run dev
-# → Vite dev server at http://localhost:5173
-```
+nano .env
 
-> Open **http://localhost:5173** in your browser.
+Add:
 
----
-
-## 🔧 Environment Variables
-
-`server/.env` (already created):
-
-```env
 PORT=5000
-MONGO_URI=mongodb://localhost:27017/todo_db
-NODE_ENV=development
-```
+MONGO_URI=mongodb://127.0.0.1:27017/todoapp
+JWT_SECRET=mysecretkey
 
----
+Save:
 
-## 🔌 REST API Reference
+Ctrl + O
+Enter
+Ctrl + X
 
-| Method   | Endpoint                  | Description              |
-|----------|---------------------------|--------------------------|
-| `GET`    | `/api/todos`              | Get all todos            |
-| `POST`   | `/api/todos`              | Create a new todo        |
-| `PUT`    | `/api/todos/:id`          | Update todo title        |
-| `PATCH`  | `/api/todos/:id/toggle`   | Toggle completed status  |
-| `DELETE` | `/api/todos/:id`          | Delete a todo            |
-| `GET`    | `/api/health`             | Server health check      |
+Run backend:
 
-### Example Requests
+node server.js
 
-**Create a task**
-```json
-POST /api/todos
-{ "title": "Buy groceries" }
+OR
 
-// 201 Response
-{
-  "success": true,
-  "message": "Task created successfully",
-  "data": {
-    "_id": "664abc123...",
-    "title": "Buy groceries",
-    "completed": false,
-    "createdAt": "2026-05-14T06:46:00.000Z",
-    "updatedAt": "2026-05-14T06:46:00.000Z"
-  }
-}
-```
+npm start
+Step 4 — Open Backend Port
 
-**Toggle completion**
-```json
-PATCH /api/todos/:id/toggle
+AWS → Security Groups → Add Rule
 
-// 200 Response
-{
-  "success": true,
-  "message": "Task marked as completed",
-  "data": { "completed": true, ... }
-}
-```
+Type	Port
+Custom TCP	5000
 
----
+Source:
 
-## 🗄️ MongoDB Schema
+0.0.0.0/0
+Step 5 — Open New Terminal
 
-```js
-const todoSchema = new mongoose.Schema({
-  title:     { type: String, required: true, maxlength: 300 },
-  completed: { type: Boolean, default: false },
-}, { timestamps: true }); // adds createdAt + updatedAt automatically
-```
+Go to frontend:
 
----
+cd ~/todo-app/frontend
 
-## ✨ Features
+Install packages:
 
-| Feature                    | ✅ |
-|----------------------------|----|
-| Add task                   | ✅ |
-| Inline edit task           | ✅ |
-| Delete task                | ✅ |
-| Toggle completed/pending   | ✅ |
-| Filter: All / Pending / Done | ✅ |
-| Creation date display      | ✅ |
-| Empty state messages       | ✅ |
-| Shimmer skeleton loader    | ✅ |
-| Toast notifications        | ✅ |
-| Input validation (FE + BE) | ✅ |
-| Global error handler       | ✅ |
-| Responsive layout          | ✅ |
-| Dark mode UI               | ✅ |
+npm install
 
----
+Run frontend:
 
-## 🧪 Tech Stack
+npm run dev -- --host
 
-| Layer      | Technology                          |
-|------------|-------------------------------------|
-| Frontend   | React 18, Vite 5, Axios             |
-| Styling    | Vanilla CSS (design token system)   |
-| Toasts     | react-hot-toast                     |
-| Icons      | react-icons (Feather set)           |
-| Backend    | Node.js 18+, Express 4              |
-| Validation | express-validator                   |
-| Database   | MongoDB 7 + Mongoose 8              |
-| Dev tools  | Nodemon                             |
+OR
+
+npm start
+Step 6 — Open Frontend Port
+
+Add rule:
+
+Type	Port
+Custom TCP	5173
+
+Source:
+
+0.0.0.0/0
+Step 7 — Open Website
+http://YOUR_PUBLIC_IP:5173
+Practical 15 — CC Online Event Registration System (MERN)
+Step 1 — Clone Repository
+git clone https://github.com/YOUR_USERNAME/event-registration-system.git
+
+Go inside:
+
+cd event-registration-system
+
+Check folders:
+
+ls
+
+You should see:
+
+backend  frontend
+Step 2 — Install MongoDB
+sudo apt update
+sudo apt install mongodb -y
+
+Start MongoDB:
+
+sudo systemctl start mongod
+
+Enable MongoDB:
+
+sudo systemctl enable mongod
+Step 3 — Backend Setup
+
+Go to backend:
+
+cd backend
+
+Install packages:
+
+npm install
+
+Create .env:
+
+nano .env
+
+Add:
+
+PORT=5000
+MONGO_URI=mongodb://127.0.0.1:27017/eventdb
+JWT_SECRET=mysecretkey
+
+Save:
+
+Ctrl + O
+Enter
+Ctrl + X
+
+Run backend:
+
+node server.js
+
+OR
+
+npm start
+Step 4 — Open Backend Port
+
+AWS → Security Groups → Add Rule
+
+Type	Port
+Custom TCP	5000
+
+Source:
+
+0.0.0.0/0
+Step 5 — Open New Terminal
+
+Go to frontend:
+
+cd ~/event-registration-system/frontend
+
+Install packages:
+
+npm install
+
+Run frontend:
+
+npm run dev -- --host
+
+OR
+
+npm start
+Step 6 — Open Frontend Port
+
+Add rule:
+
+Type	Port
+Custom TCP	5173
+
+Source:
+
+0.0.0.0/0
+Step 7 — Open Website
+http://YOUR_PUBLIC_IP:5173
+
+
+
